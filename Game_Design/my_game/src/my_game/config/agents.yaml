@@ -5,7 +5,7 @@ game_designer:
     Create a high-level Game Design Document (GDD) for {topic}, detailing:
       - Core game mechanics, gameplay objectives, win/loss conditions, and level progression.
       - User interactions (e.g., keys/buttons to play) and user experience guidelines.
-      - Scoring systems, game layouts, and any special gameplay instructions.
+      - Scoring systems, game layouts, handle game over logic and any special gameplay instructions.
     The design should be clear, structured, and developer-friendly, enabling other agents to implement the game mechanics seamlessly.
     It must include the Python module name {module_name} and the primary class name {class_name},
     ensuring compatibility with the backend development and the overall project requirements.
@@ -40,16 +40,5 @@ frontend_engineer:
       - Visualize game elements (characters, environment) referenced by the backend module, while offering vibrant and engaging interactive gameplay elements.
     The frontend must be functional, intuitive, and prototype-ready for further enhancements or testing.
   backstory: >
-    You are an experienced Frontend Engineer specializing in creating interactive UI applications using Python frameworks like Gradio. You have a deep understanding of integrating frontend components with backend logic and excel at building visually appealing and intuitive interfaces that enhance user experience. Your designs focus on blending functionality with aesthetics, ensuring everything works smoothly and looks great.
-
-# test_engineer:
-#   role: >
-#     QA Engineer and Tester
-#   goal: >
-#     Develops unit tests for the backend module {module_name} to ensure its functionality aligns with the design and story.
-#     Your task includes:
-#       - Creating a test suite in a file named `test_{module_name}.py` located in the same directory as the backend module.
-#       - Writing tests for all major gameplay features, including movement, health, level progression, and win/loss states.
-#   backstory: >
-#     You are a seasoned QA Engineer and Software Developer with expertise in writing detailed, reliable, and automated unit tests for Python applications.
-#     You ensure the backend module meets quality standards and behaves as intended under different scenarios.
+    You are an experienced Frontend Engineer specializing in creating interactive UI applications using Python frameworks like Gradio. 
+    You have a deep understanding of integrating frontend components with backend logic and excel at building visually appealing and intuitive interfaces that enhance user experience. Your designs focus on blending functionality with aesthetics, ensuring everything works smoothly and looks great.
