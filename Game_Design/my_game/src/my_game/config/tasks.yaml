@@ -1,0 +1,54 @@
+design_task:
+  description: >
+    Create a high-level Game Design Document (GDD) for the specified topic: {topic}. The document must include:
+      - Core game mechanics, gameplay objectives, win/loss conditions, and level progression.
+      - User interactions (e.g., keys/buttons to play) and user experience (UX) guidelines.
+      - Scoring systems, detailed game layouts, and any special gameplay instructions.
+    The design must be structured, clear, and developer-friendly to enable seamless implementation by other agents. It should include:
+      - The Python module name: {module_name}.
+      - The primary class name: {class_name}.
+    These details ensure compatibility with backend development and project integration requirements.
+  expected_output: >
+    A structured markdown (.md) file containing the complete GDD, specifying:
+      - Classes, methods, and functionalities required for the game module.
+      - Detailed gameplay elements and design notes for developers.
+  agent: game_designer
+  output_file: output/{module_name}_design.md
+
+code_task:
+  description: >
+    Develop a Python module using the latest version of 'pygame' library, following the Game Designer's specifications in the Game Design Document (GDD). The module must:
+      - Align with the described core game mechanics, gameplay features, and user interaction requirements.
+      - Contain a single, self-contained Python class named {class_name}, as specified in the GDD.
+      - Demonstrate clean, modular, and reusable code that adheres to Python best practices.
+      - IMPORTANT: Output ONLY valid Python code (no markdown, no backticks, or formatting).
+      - Operate efficiently and be fully testable, ready for integration with the overall game system, including the UI.
+      - Cover all edge cases and verify the code once completed with GDD
+  expected_output: >
+    A Python (.py) file containing the complete backend code implementing the required functionality for the game.
+  agent: game_developer
+  context:
+    - design_task
+  output_file: output/{module_name}.py
+
+frontend_task:
+  description: >
+    Develop a simple latest version Gradio-based frontend UI that integrates with the {module_name}.py backend module. 
+    The UI should include:
+      - A "Start Game" button that launches the game when clicked in another window.
+      - A section displaying detailed gameplay instructions for the user, including:
+        - How to play the game.
+        - User interactions and the keys or buttons used for controls.
+    The goal is to provide an interactive and functional user interface that complements the backend gameplay mechanics.
+
+  expected_output: >
+    A Python (.py) file containing the Gradio frontend application that integrates with the backend module {module_name}. The UI should:
+      - Visually render the game and its characters as referenced by the backend logic.
+      - Provide interactive gameplay, allowing users to control characters and interact with the game logic.
+      - Include vibrant and clear visual elements that enhance the user experience.
+    IMPORTANT: Provide ONLY valid Python code as the output, without any markdown, backticks, or additional formatting.
+
+  agent: frontend_engineer
+  context:
+    - code_task
+  output_file: output/app.py
