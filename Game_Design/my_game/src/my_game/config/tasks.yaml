@@ -59,3 +59,32 @@ frontend_task:
   context:
     - code_task
   output_file: output/app.py
+
+test_task:
+  description: >
+    Create a comprehensive test suite for unit testing the backend module {module_name}.
+    The test suite should validate the functionality of all major classes and methods, ensuring compatibility across various game scenarios, such as:
+      - Testing movement logic for the snake or characters.
+      - Validating collision detection.
+      - Verifying game state management (win/loss conditions).
+      - Testing food consumption and scoring mechanics.
+      - Edge cases for boundary limits or invalid moves.
+      
+    IMPORTANT: Output ONLY valid Python code (no markdown, no backticks, or additional formatting) and ensure it is ready for execution.
+
+  expected_output: >
+    A Python test file named `test_{module_name}.py` that contains a well-defined set of unit tests for the backend logic implemented in the `{module_name}.py` file.
+    Each test should:
+      - Focus on a specific function, class, or game mechanic.
+      - Ensure accuracy for normal operations, edge cases, and exceptions (where applicable).
+      - Adhere to Python's standard testing practices (e.g., using `unittest` or `pytest`).
+
+    IMPORTANT:
+      - The `test_{module_name}.py` file must be executable as a standalone test suite.
+      - Clearly separate tests into logical groups (e.g., movement tests, game state tests, scoring tests).
+      - The code output must be compatible with the Python testing framework.
+
+  agent: test_engineer
+  context:
+    - code_task
+  output_file: output/test_{module_name}.py

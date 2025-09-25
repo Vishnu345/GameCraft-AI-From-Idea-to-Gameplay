@@ -45,7 +45,14 @@ class MyGame():
             verbose=True,
         )
     
-
+    @agent
+    def test_engineer(self) -> Agent:
+        return Agent(
+            config=self.agents_config['test_engineer'],
+            llm=llm,
+            verbose=True,
+        )
+    
     @task
     def design_task(self) -> Task:
         return Task(
@@ -62,6 +69,12 @@ class MyGame():
     def frontend_task(self) -> Task:
         return Task(
             config=self.tasks_config['frontend_task'],
+        )
+    
+    @task
+    def test_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['test_task'],
         )
 
     @crew
