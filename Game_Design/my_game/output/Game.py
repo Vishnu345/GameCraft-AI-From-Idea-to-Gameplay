@@ -1,107 +1,212 @@
-import random
+import pygame
+
+class Paddle:
+    def __init__(self, x, y, width, height, speed):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.speed = speed
+
+    def move_left(self):
+        self.x -= self.speed
+
+    def move_right(self):
+        self.x += self.speed
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, (0, 0, 255), (self.x, self.y, self.width, self.height))
+
+
+class Ball:
+    def __init__(self, x, y, radius, speed_x, speed_y):
+        self.x = x
+        self.y = y
+        self.radius = radius
+        self.speed_x = speed_x
+        self.speed_y = speed_y
+
+    def move(self):
+        self.x += self.speed_x
+        self.y += self.speed_y
+
+    def draw(self, screen):
+        pygame.draw.circle(screen, (255, 0, 0), (self.x, self.y), self.radius)
+
+    def bounce_x(self):
+        self.speed_x *= -1
+
+    def bounce_y(self):
+        self.speed_y *= -1
+
+class Obstacle:
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, (0, 255, 0), (self.x, self.y, self.width, self.height))
 
 
 class Game:
-    def __init__(self, grid_width, grid_height, initial_speed):
-        """
-        Initializes the game with the given grid dimensions and initial speed.
+    def __init__(self, width=800, height=600):
+        pygame.init()
+        self.screen_width = width
+        self.screen_height = height
+        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
+        pygame.display.set_caption("Bouncing Ball")
 
-        Args:
-            grid_width (int): Width of the game grid.
-            grid_height (int): Height of the game grid.
-            initial_speed (int): Initial speed of the snake.
-        """
-        self.grid_width = grid_width
-        self.grid_height = grid_height
-        self.initial_speed = initial_speed
-        self.reset()  # Initialize/reset the game state.
+        paddle_width = 100
+        paddle_height = 15
+        paddle_x = (self.screen_width - paddle_width) // 2
+        paddle_y = self.screen_height - paddle_height - 10
+        paddle_speed = 5
+        self.paddle = Paddle(paddle_x, paddle_y, paddle_width, paddle_height, paddle_speed)
 
-    def reset(self):
-        """Resets the game to its initial state."""
-        self.snake = [(self.grid_width // 2, self.grid_height // 2)]  # Snake starts at the center.
-        self.food = self._spawn_food()
-        self.direction = random.choice(['up', 'down', 'left', 'right'])
+        ball_radius = 10
+        ball_x = self.screen_width // 2
+        ball_y = self.screen_height // 2
+        ball_speed_x = 3
+        ball_speed_y = 3
+        self.ball = Ball(ball_x, ball_y, ball_radius, ball_speed_x, ball_speed_y)
+
         self.score = 0
-        self.speed = self.initial_speed
         self.game_over = False
+        self.font = pygame.font.Font(None, 36)
+        self.paused = False
+        self.clock = pygame.time.Clock()
 
-    def _spawn_food(self):
-        """Generates food at a random position not occupied by the snake."""
-        while True:
-            x, y = random.randint(0, self.grid_width - 1), random.randint(0, self.grid_height - 1)
-            if (x, y) not in self.snake:
-                return (x, y)
+        self.obstacles = [
+            Obstacle(100, 150, 50, 20),
+            Obstacle(300, 250, 75, 20),
+            Obstacle(500, 100, 60, 20)
+        ]
 
-    def move(self):
-        """
-        Moves the snake one step in the current direction. Checks for collisions,
-        food consumption, and updates the game state accordingly.
-        """
-        head_x, head_y = self.snake[0]
-        new_head = {
-            'up': (head_x, head_y - 1),
-            'down': (head_x, head_y + 1),
-            'left': (head_x - 1, head_y),
-            'right': (head_x + 1, head_y)
-        }.get(self.direction)
+        self.start_game = False  # Flag to indicate if the game has started
 
-        # Collision detection
-        if not self._is_valid_move(new_head[0], new_head[1]) or self._is_collision(new_head):
-            self.game_over = True
-            return
+    def run(self):
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_p:
+                        self.paused = not self.paused
+                    if event.key == pygame.K_SPACE and not self.start_game:
+                        self.start_game = True
+                        self.reset()
 
-        self.snake.insert(0, new_head)  # Add new head to the snake.
+            if self.start_game:
+                if not self.paused and not self.game_over:
+                    self.handle_input()
+                    self.update()
+                    self.render(self.screen)
+                elif self.paused:
+                    self.display_pause_screen(self.screen)
+                elif self.game_over:
+                    self.game_over_screen(self.screen)
+            else:
+                self.display_start_screen(self.screen)
 
-        # Check if food is eaten
-        if new_head == self.food:
-            self.score += 10
-            self.food = self._spawn_food()
-            self.speed = max(1, self.speed - 0.2)  # Increase speed as snake grows.
-        else:
-            self.snake.pop()  # Remove the tail if food not eaten.
+            pygame.display.flip()
+            self.clock.tick(60)
 
-    def change_direction(self, new_direction):
-        """
-        Changes the direction of the snake and prevents 180-degree turns.
+        pygame.quit()
 
-        Args:
-            new_direction (str): New direction ('up', 'down', 'left', 'right').
-        """
-        opposite_directions = {'up': 'down', 'down': 'up', 'left': 'right', 'right': 'left'}
-        if new_direction != opposite_directions.get(self.direction):
-            self.direction = new_direction
-
-    def _is_valid_move(self, x, y):
-        """Checks if a given position is within grid boundaries."""
-        return 0 <= x < self.grid_width and 0 <= y < self.grid_height
-
-    def _is_collision(self, head):
-        """Checks if the snake's head collides with its body."""
-        return head in self.snake[1:]
+    def handle_input(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            self.paddle.move_left()
+            if self.paddle.x < 0:
+                self.paddle.x = 0
+        if keys[pygame.K_RIGHT]:
+            self.paddle.move_right()
+            if self.paddle.x > self.screen_width - self.paddle.width:
+                self.paddle.x = self.screen_width - self.paddle.width
 
     def update(self):
-        """Updates the game (moves the snake if it's not game over)."""
-        if not self.game_over:
-            self.move()
+        self.ball.move()
+        self.check_collision()
 
-    def get_state(self):
-        """
-        Returns the current state of the game.
+        if self.ball.y > self.screen_height:
+            self.game_over = True
 
-        Returns:
-            dict: Game state including grid dimensions, snake position, food position,
-                  score, speed, and game-over status.
-        """
-        return {
-            'grid_width': self.grid_width,
-            'grid_height': self.grid_height,
-            'snake': self.snake,
-            'food': self.food,
-            'score': self.score,
-            'game_over': self.game_over,
-            'speed': self.speed
-        }
+    def render(self, screen):
+        screen.fill((0, 0, 0))
+        self.paddle.draw(screen)
+        self.ball.draw(screen)
 
-    def get_score(self):
-        """Returns the player's current score."""
-        return self.score
+        for obstacle in self.obstacles:
+            obstacle.draw(screen)
+
+        score_text = self.font.render(f"Score: {self.score}", True, (255, 255, 255))
+        screen.blit(score_text, (10, 10))
+
+    def check_collision(self):
+        # Ball and Paddle collision
+        if (self.ball.x + self.ball.radius > self.paddle.x and
+            self.ball.x - self.ball.radius < self.paddle.x + self.paddle.width and
+            self.ball.y + self.ball.radius > self.paddle.y and
+            self.ball.y - self.ball.radius < self.paddle.y + self.paddle.height):
+            self.ball.bounce_y()
+            self.score += 10
+
+        # Ball and Walls collision
+        if self.ball.x - self.ball.radius < 0 or self.ball.x + self.ball.radius > self.screen_width:
+            self.ball.bounce_x()
+        if self.ball.y - self.ball.radius < 0:
+            self.ball.bounce_y()
+
+        # Ball and Obstacles collision
+        for obstacle in self.obstacles:
+            if (self.ball.x + self.ball.radius > obstacle.x and
+                self.ball.x - self.ball.radius < obstacle.x + obstacle.width and
+                self.ball.y + self.ball.radius > obstacle.y and
+                self.ball.y - self.ball.radius < obstacle.y + obstacle.height):
+                self.ball.bounce_y()
+                self.score += 20 # More points for obstacle bounce
+
+    def game_over_screen(self, screen):
+          screen.fill((0, 0, 0))
+          game_over_text = self.font.render("Game Over", True, (255, 255, 255))
+          score_text = self.font.render(f"Final Score: {self.score}", True, (255, 255, 255))
+          #restart_text = self.font.render("Press SPACE to Restart", True, (255,255,255))
+
+
+          game_over_rect = game_over_text.get_rect(center=(self.screen_width // 2, self.screen_height // 2 - 50))
+          score_rect = score_text.get_rect(center=(self.screen_width // 2, self.screen_height // 2))
+          #restart_rect = restart_text.get_rect(center=(self.screen_width // 2, self.screen_height // 2 + 50))
+
+          screen.blit(game_over_text, game_over_rect)
+          screen.blit(score_text, score_rect)
+          #screen.blit(restart_text, restart_rect)
+
+    def display_pause_screen(self, screen):
+        pause_text = self.font.render("Paused", True, (255, 255, 255))
+        pause_rect = pause_text.get_rect(center=(self.screen_width // 2, self.screen_height // 2))
+        screen.blit(pause_text, pause_rect)
+
+    def display_start_screen(self, screen):
+        screen.fill((0, 0, 0))
+        start_text = self.font.render("Press SPACE to Start", True, (255, 255, 255))
+        start_rect = start_text.get_rect(center=(self.screen_width // 2, self.screen_height // 2))
+        screen.blit(start_text, start_rect)
+
+    def reset(self):
+        self.score = 0
+        self.game_over = False
+        self.ball.x = self.screen_width // 2
+        self.ball.y = self.screen_height // 2
+        self.ball.speed_x = 3
+        self.ball.speed_y = 3
+        paddle_width = 100
+        paddle_x = (self.screen_width - paddle_width) // 2
+        self.paddle.x = paddle_x
+
+
+if __name__ == "__main__":
+    game = Game()
+    game.run()
