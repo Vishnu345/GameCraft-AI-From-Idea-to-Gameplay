@@ -1,184 +1,143 @@
 ```markdown
 # Game Design Document: Simple Snake Game
 
-**1. Introduction**
+## 1. Introduction
 
-This document outlines the design for a simple snake game, focusing on clarity and developer-friendliness to enable seamless implementation. The game will be implemented in Python, using the module name `Game` and the primary class name `Game`.
+This document outlines the design for a simple Snake game. The game will be developed in Python and will adhere to the principles of simplicity and ease of use. This document serves as a guide for developers to implement the game mechanics seamlessly.
 
-**2. Game Overview**
+## 2. Game Overview
 
-The snake game is a classic arcade game where the player controls a snake that moves around the screen, eating food to grow longer. The objective is to eat as much food as possible without colliding with the walls or the snake's own body.
+The Snake game is a classic arcade game where the player controls a snake that moves around a grid. The objective is to eat food items to increase the snake's length without colliding with the walls or the snake's own body.
 
-**3. Core Game Mechanics**
+**Python Module Name:** `Game`
+**Primary Class Name:** `Game`
 
-*   **Movement:** The snake moves continuously in one of four directions (up, down, left, right). The player can change the snake's direction using the arrow keys or WASD keys.
-*   **Eating:** When the snake's head collides with food, the snake grows longer, and the food is moved to a new random location on the game board.
-*   **Collision:** The game ends if the snake's head collides with the wall or any part of its own body.
+## 3. Core Game Mechanics
 
-**4. Gameplay Objectives**
+### 3.1. Movement
+*   The snake moves continuously in one of four directions: up, down, left, or right.
+*   The player can change the direction of the snake using keyboard input.
+*   The snake's body follows the head, with each segment moving to the position previously occupied by the segment in front of it.
 
-*   The primary objective is to achieve the highest possible score by eating food and growing the snake.
-*   A secondary objective could be to unlock achievements or reach certain score milestones.
+### 3.2. Food Consumption
+*   Food items appear randomly on the game grid.
+*   When the snake's head collides with a food item, the snake eats the food, and its length increases by one segment.
+*   A new food item is generated at a random location after the previous one is eaten.
 
-**5. Win/Loss Conditions**
+### 3.3. Collision Detection
+*   The game checks for collisions between the snake's head and the walls of the game grid.
+*   The game also checks for collisions between the snake's head and its own body.
+*   A collision results in the end of the game.
 
-*   **Win Condition:** There is no explicit win condition in the traditional sense. The game continues indefinitely until the player loses. A possible win condition could be added if a level progression system is implemented, where each level has a target score.
-*   **Loss Condition:** The game ends when the snake's head collides with:
-    *   The game board boundaries (walls).
-    *   Any part of its own body.
+## 4. Gameplay Objectives
 
-**6. Level Progression**
+*   The primary objective of the game is to achieve the highest possible score by eating as much food as possible without colliding with the walls or the snake's own body.
 
-*   **Initial Implementation:** The initial version of the game will have a single level with a fixed grid size.
-*   **Future Enhancements:** Level progression could be implemented by:
-    *   Increasing the game speed as the player scores more points.
-    *   Introducing obstacles or power-ups.
-    *   Changing the size or shape of the game board.
-    *   Adding different types of food with varying point values.
+## 5. Win/Loss Conditions
 
-**7. User Interactions**
+*   **Win Condition:** There is no explicit win condition. The game continues indefinitely until the player loses. However, an implicit win condition can be defined as reaching a specified score or snake length. For the sake of simplicity, we will define no win conditions.
+*   **Loss Condition:** The game ends when the snake collides with either:
+    *   The walls of the game grid.
+    *   Its own body.
 
-*   **Controls:**
-    *   **Movement:**
-        *   Up: Up arrow key or 'W' key
-        *   Down: Down arrow key or 'S' key
-        *   Left: Left arrow key or 'A' key
-        *   Right: Right arrow key or 'D' key
-    *   **Start/Pause:**
-        *   Spacebar: Toggles between pause and resume (optional).
-    *   **Restart:**
-         *   'R' key : Restarts game when game is over.
-*   **User Experience (UX) Guidelines:**
-    *   **Responsive Controls:** Ensure that the snake responds immediately to player input.
-    *   **Clear Visuals:** Use clear and distinct colors for the snake, food, and background.
-    *   **Informative Feedback:** Display the current score prominently on the screen. Display a game over message when the player loses, including the final score.
-    *   **Intuitive Interface:** The game should be easy to understand and play without requiring instructions.
+## 6. Level Progression
 
-**8. Scoring System**
+*   The game starts at a defined speed.
+*   The speed of the snake can increase as the score increases, making the game progressively more challenging. (Optional)
+*   The game area size can be fixed or dynamic. For simplicity, we'll use a fixed size.
 
-*   **Base Score:** Each piece of food eaten increases the score by a fixed amount (e.g., 10 points).
-*   **Score Multiplier (Optional):** A score multiplier could be introduced based on the snake's length or speed, encouraging risky gameplay.
-*   **High Score Tracking:** The game should keep track of the highest score achieved and display it to the player.
+## 7. User Interactions
 
-**9. Game Layout**
+*   **Movement Controls:**
+    *   Up Arrow Key: Move the snake up.
+    *   Down Arrow Key: Move the snake down.
+    *   Left Arrow Key: Move the snake left.
+    *   Right Arrow Key: Move the snake right.
+*   **Start/Pause:**
+    *   Spacebar: Start the game or pause/resume the game. (Optional)
+*   **Restart:**
+     *  'R' Key: Restart the game after it is over. (Optional)
 
-*   **Grid-Based:** The game board will be divided into a grid of cells. The snake and food will occupy one or more cells.
-*   **Size:** The grid size can be configurable, allowing for different difficulty levels (e.g., 20x20, 30x30).
-*   **Boundaries:** The game board will have clearly defined boundaries that the snake cannot pass through.
-*   **Visual Representation:** Use a simple visual representation for the snake (e.g., colored blocks or segments), food (e.g., a different colored block), and background (e.g., a solid color).
+## 8. User Experience (UX) Guidelines
 
-**10. Special Gameplay Instructions**
+*   **Visual Clarity:** The game grid, snake, and food items should be easily distinguishable. Use contrasting colors to ensure good visibility.
+*   **Responsive Controls:** The snake should respond immediately to player input, providing a smooth and responsive experience.
+*   **Clear Feedback:** The game should provide clear feedback to the player, such as:
+    *   Displaying the current score.
+    *   Indicating when the snake has eaten food.
+    *   Displaying a "Game Over" message when the player loses.
+*   **Simple Interface:** The game interface should be clean and uncluttered, focusing on the core gameplay elements.
 
-*   **Initial Snake Length:** The snake should start with a length of 3-5 segments.
-*   **Initial Snake Position:** The snake should start in the center of the game board, moving in a random direction.
-*   **Food Generation:** Food should be generated randomly on the game board, ensuring that it does not spawn on top of the snake.
-*   **Game Speed:** The game speed (i.e., the rate at which the snake moves) should be adjustable to control the difficulty.
-*   **Pause Functionality:** (Optional) Implement a pause function that allows the player to temporarily stop the game without losing progress.
+## 9. Scoring System
 
-**11. Python Module: `Game`**
+*   The player's score increases by a fixed amount (e.g., 10 points) each time the snake eats a food item.
+*   The score can be displayed prominently on the screen during gameplay.
+*   A high score can be stored and displayed after the game ends.
 
-*   **Module Name:** `Game`
+## 10. Game Layout
 
-**12. Primary Class: `Game`**
+*   **Grid Size:** The game grid will be of a fixed size (e.g., 20x20 cells).
+*   **Walls:** The boundaries of the grid will act as walls.
+*   **Initial Snake Position:** The snake will start at the center of the grid with an initial length of 3 segments.
+*   **Food Placement:** Food items will be placed randomly on the grid, ensuring that they do not overlap with the snake's body.
 
-*   **Class Name:** `Game`
-*   **Attributes:**
-    *   `grid_width` (int): The width of the game grid.
-    *   `grid_height` (int): The height of the game grid.
-    *   `snake` (list of tuples): A list of (x, y) coordinates representing the snake's body segments. The head of the snake is the first element in the list.
-    *   `food` (tuple): The (x, y) coordinates of the food.
-    *   `direction` (str): The current direction of the snake ('up', 'down', 'left', 'right').
-    *   `score` (int): The player's current score.
-    *   `game_over` (bool): A flag indicating whether the game is over.
-    *  `speed` (int): Game speed (frames per move).
-*   **Methods:**
-    *   `__init__(self, grid_width, grid_height, initial_speed)`: Initializes the game.  Sets up the grid dimensions, places the initial snake, generates the first food item, sets the initial direction, initializes the score, and sets the game_over flag to False. `initial_speed` sets the game speed.
-    *   `reset(self)`: Reset the game to begin from fresh.
-    *   `spawn_food(self)`: Generates a new food item at a random location on the grid that is not occupied by the snake.
-    *   `move(self)`: Moves the snake one step in the current direction.  Checks for collisions with the walls and the snake's body. If a collision occurs, sets the game_over flag to True. If the snake eats food, it grows longer and the score increases.
-    *   `change_direction(self, new_direction)`: Changes the snake's direction, preventing immediate 180-degree turns.
-    *   `get_state(self)`: Returns the current state of the game, including the grid size, snake position, food position, score, and game_over status. This can be used for rendering the game or for AI purposes.
-    *   `is_valid_move(self, x, y)`: Checks if a given cell (x, y) is within the grid boundaries.
-    *   `is_collision(self, x, y)`: Checks if snake collides with its body.
-    *   `update(self)`: Handle the game state update. Move snake, check for food eaten and collision, and updates score.
-    *   `get_score(self)`: Return the score.
+## 11. Game Over Logic
 
-**13. Detailed Gameplay Elements and Design Notes**
+1.  When a collision occurs (snake hits wall or itself):
+    *   The game pauses.
+    *   A "Game Over" message is displayed on the screen, along with the player's final score.
+    *   The option to restart the game is presented to the player (e.g., "Press R to Restart").
 
-*   **Game Initialization:**
-    *   The `Game` class should be initialized with the grid dimensions (width and height) and initial speed.
-    *   The snake should start in the center of the grid with a length of 3-5 segments.
-    *   The initial direction of the snake should be randomly chosen.
-    *   The first food item should be generated at a random location on the grid.
-*   **Snake Movement:**
-    *   The snake moves continuously in the current direction.
-    *   The `move()` method should update the snake's position by adding a new segment to the head and removing the last segment of the tail, unless the snake has eaten food.
-    *   The `change_direction()` method should update the snake's direction based on player input, preventing immediate 180-degree turns.
-*   **Food Consumption:**
-    *   When the snake's head collides with the food, the snake grows longer, and the food is moved to a new random location on the grid.
-    *   The `spawn_food()` method should generate a new food item at a random location on the grid that is not occupied by the snake.
-    *   The score should be updated when the snake eats food.
-*   **Collision Detection:**
-    *   The game should check for collisions with the walls and the snake's body.
-    *   If a collision occurs, the game_over flag should be set to True.
-*   **Game Over:**
-    *   When the game_over flag is set to True, the game should display a game over message and the final score.
-    *   The player should be able to restart the game by pressing a key (e.g., 'R').
-*   **Rendering:**
-    *   The game state should be rendered on the screen using a suitable graphics library (e.g., Pygame, Tkinter).
-    *   The snake, food, and background should be rendered with clear and distinct colors.
-    *   The score should be displayed prominently on the screen.
-*   **Game Loop:**
-    *   The game should run in a loop that updates the game state and renders the game on the screen.
-    *   The loop should run at a fixed frame rate to ensure smooth gameplay.
-*   **Modular Design:** The code should be modular to facilitate future enhancements and modifications.
+## 12. Special Gameplay Instructions
 
-**14. Example Class Usage**
-```python
-# Example usage
-from Game import Game
+*   The snake cannot move directly in the opposite direction of its current movement (e.g., if moving right, the player cannot immediately move left). This prevents the snake from colliding with itself instantly.
+*   The game should include a brief set of instructions displayed at the start of the game or in a separate help menu.
 
-#Game Setup
-grid_width = 20
-grid_height = 20
-initial_speed = 10 #frames per move
+## 13. Module: Game
 
-game = Game(grid_width, grid_height, initial_speed)
+This section details the proposed structure and functionalities within the `Game` module.
 
-#Game loop Example (this would typically be in your main application)
-while not game.game_over:
-    #Get player input. example:
-    #new_direction = get_player_direction() #Function to handle player input
+### 13.1. Class: `Game`
 
-    #Example direction change
-    #game.change_direction(new_direction) #Change direction
+The primary class that encapsulates the game logic.
 
-    #Update the game state
-    game.update()
+#### 13.1.1. Attributes:
 
-    #Render the game (implementation not detailed here)
-    #render(game.get_state())
+*   `grid_width` (int): The width of the game grid.
+*   `grid_height` (int): The height of the game grid.
+*   `snake` (list of tuples): A list of (x, y) coordinates representing the snake's body segments.
+*   `food` (tuple): The (x, y) coordinate of the food item.
+*   `direction` (str): The current direction of the snake ('up', 'down', 'left', 'right').
+*   `score` (int): The player's current score.
+*   `game_over` (bool): A flag indicating whether the game is over.
+*   `speed` (int): The game speed, dictating how often the game updates.
 
-    #Delay (Control Game speed)
-    #time.sleep(1 / game.speed)
-    #Optional delay - based on speed attribute from Game class.
+#### 13.1.2. Methods:
 
-#Game over sequence
-final_score = game.get_score()
-print(f"Game Over! Final Score: {final_score}")
+*   `__init__(self, width, height)`: Initializes the game with the specified grid dimensions. Sets up the initial snake position, food position, score, direction, and game state.
+*   `reset(self)`: Resets the game state to its initial configuration. Snake is centered, score is zeroed, and a new food item is generated.
+*   `update(self)`: Updates the game state based on the current direction. Moves the snake, checks for collisions, and handles food consumption.
+*   `move_snake(self)`: Moves the snake one step in the current direction.
+*   `check_collisions(self)`: Checks for collisions with the walls or the snake's own body. Sets `game_over` to `True` if a collision occurs.
+*   `eat_food(self)`: Handles the logic for when the snake eats food. Increases the snake's length, updates the score, and generates new food.
+*   `generate_food(self)`: Generates a new food item at a random location on the grid, ensuring it does not overlap with the snake.
+*   `change_direction(self, new_direction)`: Changes the snake's direction, validating that the new direction is not directly opposite the current direction.
+*   `get_state(self)`: Returns the current state of the game, including the snake's position, food position, score, and game over status. This is important for rendering the game and determining if the game has ended.
 
-#Reset the game for another play
-#game.reset()
-```
+### 13.2. Functionalities:
 
-**15. Future Enhancements**
+*   **Game Initialization:**  The `Game` class constructor should properly initialize the game state.
+*   **Game Loop:** The `update` method forms the core of the game loop, handling snake movement, collision detection, and food consumption.
+*   **Input Handling:** The `change_direction` method is responsible for processing user input and updating the snake's direction accordingly.
+*   **Rendering:** The `get_state` method allows an external system or rendering engine to retrieve the current state of the game for visual representation.
+*   **Game Over:** The `check_collisions` method determines if the game is over. Once it is set, the game loop should be halted.
+*   **Score Tracking:** Score is updated within the `eat_food` method.
 
-*   **Level Progression:** Implement multiple levels with increasing difficulty.
-*   **Power-Ups:** Introduce power-ups that grant temporary advantages, such as increased speed or invincibility.
-*   **Obstacles:** Add obstacles to the game board that the snake must avoid.
-*   **Multiplayer:** Allow multiple players to compete against each other.
-*   **AI Opponent:** Implement an AI opponent that plays the game automatically.
-*   **Sound Effects and Music:** Add sound effects and music to enhance the game's atmosphere.
+## 14. Design Notes for Developers
 
-This document provides a comprehensive guide for developing a simple snake game. The detailed descriptions of the core game mechanics, gameplay objectives, user interactions, and scoring system should enable developers to implement the game seamlessly. The modular design and clear code structure will facilitate future enhancements and modifications.
+*   **Data Structures:** Use appropriate data structures for representing the game grid, snake, and food items. Lists and tuples are suitable for the snake and food, while a 2D array could represent the grid, though it is not strictly necessary.
+*   **Modular Design:** Break down the game logic into smaller, reusable functions and methods.
+*   **Error Handling:** Implement basic error handling to prevent the game from crashing due to unexpected input or conditions.
+*   **Optimization:** Consider optimizing the game for performance, especially collision detection and rendering, to ensure smooth gameplay.  This is less critical for a simple implementation but something to keep in mind if more complex features are added.
+*   **Testing:** Thoroughly test the game to identify and fix bugs before release.  Pay close attention to edge cases (e.g., snake eating food right before hitting a wall).
 ```

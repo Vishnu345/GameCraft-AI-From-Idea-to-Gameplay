@@ -18,7 +18,7 @@ design_task:
 code_task:
   description: >
     Develop a Python module using the latest version of 'pygame' library, following the Game Designer's specifications in the Game Design Document (GDD). The module must:
-      - Align with the described core game mechanics, gameplay features, and user interaction requirements.
+      - Align with the described core game mechanics, gameplay features, handle game over logic and user interaction requirements.
       - Contain a single, self-contained Python class named {class_name}, as specified in the GDD.
       - Demonstrate clean, modular, and reusable code that adheres to Python best practices.
       - IMPORTANT: Output ONLY valid Python code (no markdown, no backticks, or formatting).
@@ -33,20 +33,27 @@ code_task:
 
 frontend_task:
   description: >
-    Develop a simple latest version Gradio-based frontend UI that integrates with the {module_name}.py backend module. 
-    The UI should include:
-      - A "Start Game" button that launches the game when clicked in another window.
-      - A section displaying detailed gameplay instructions for the user, including:
-        - How to play the game.
-        - User interactions and the keys or buttons used for controls.
-    The goal is to provide an interactive and functional user interface that complements the backend gameplay mechanics.
+    Develop a latest-version Gradio-based frontend UI that integrates with the {module_name}.py backend module.
+    The frontend should dynamically import {module_name}.py to avoid code duplication across modules.
+    Ensure the UI provides an interactive and functional connection to the backend gameplay mechanics without repeating logic from the backend module.
+
+    The UI requirements include:
+      - A "Start Game" button: This button launches the game in a separate Pygame window when clicked.
+      - Gameplay instructions section: Clearly display how to play the game, including:
+          - Details about the controls (e.g., keys or buttons required for interaction).
+          - Description of gameplay objectives.
+      - Seamless integration with the backend module {module_name}, leveraging its state and methods.
+      - User-friendly and visually appealing design to enhance player interaction with the game.
+      - verify the code after completion with latest versions of the modules
 
   expected_output: >
-    A Python (.py) file containing the Gradio frontend application that integrates with the backend module {module_name}. The UI should:
-      - Visually render the game and its characters as referenced by the backend logic.
-      - Provide interactive gameplay, allowing users to control characters and interact with the game logic.
-      - Include vibrant and clear visual elements that enhance the user experience.
-    IMPORTANT: Provide ONLY valid Python code as the output, without any markdown, backticks, or additional formatting.
+    A Python (.py) file that serves as the Gradio frontend application for the game. The file must:
+      - Dynamically import the backend module {module_name}.py instead of repeating shared game code or logic.
+      - Render a responsive UI that allows users to interact with the game logic, control gameplay elements, and visualize dynamic outputs.
+      - Include clean, modular, and up-to-date Gradio code to ensure compatibility with the latest Gradio UI conventions.
+      - Ensure proper handling of thread-based backend interactions where required (e.g., multiple game launches).
+
+    IMPORTANT: Provide ONLY valid Python code as the output, without any markdown, backticks, or additional formatting. The submission must be a ready-to-execute Python file, with no extra explanations embedded.
 
   agent: frontend_engineer
   context:

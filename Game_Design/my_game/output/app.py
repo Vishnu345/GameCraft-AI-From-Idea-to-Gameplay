@@ -1,102 +1,120 @@
 import gradio as gr
 import pygame
+import random
 import threading
-import time
-from Game import Game
+import importlib.util
+import sys
+
+# Dynamically import the Game class from Game.py
+spec = importlib.util.spec_from_file_location("Game", "Game.py")
+module = importlib.util.module_from_spec(spec)
+sys.modules["Game"] = module
+spec.loader.exec_module(module)
+Game = module.Game
+
+# Game constants
+GRID_WIDTH = 80
+GRID_HEIGHT = 50
+CELL_SIZE = 10
+SCREEN_WIDTH = GRID_WIDTH * CELL_SIZE
+SCREEN_HEIGHT = GRID_HEIGHT * CELL_SIZE
+WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+BLACK = (0, 0, 0)
 
 
-def draw_game(screen, game, cell_size, font):
-    """Draws the game elements on the screen."""
-    screen.fill((0, 0, 0))  # Black background
+def run_game():
+    """
+    Runs the Pygame instance of the Snake game in a separate thread.
+    """
+    pygame.init()
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    pygame.display.set_caption("Snake Game")
+    clock = pygame.time.Clock()
+    font = pygame.font.Font(None, 30)  # Font for displaying score
 
-    # Draw snake
-    for x, y in game.snake:
-        pygame.draw.rect(screen, (0, 255, 0), (x * cell_size, y * cell_size, cell_size, cell_size))
+    game = Game(GRID_WIDTH, GRID_HEIGHT)
 
-    # Draw food
-    pygame.draw.rect(screen, (255, 0, 0), (game.food[0] * cell_size, game.food[1] * cell_size, cell_size, cell_size))
-
-    # Display score
-    score_text = font.render(f"Score: {game.score}", True, (255, 255, 255))
-    screen.blit(score_text, (5, 5))
-
-    if game.game_over:
-        game_over_text = font.render("Game Over!!", True, (255, 255, 255))
-        text_rect = game_over_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
-        screen.blit(game_over_text, text_rect)
-
-
-def game_loop(game, screen, cell_size, font, clock):
-    """Main game loop handling events, updates, and rendering."""
-    while not game.game_over:
+    running = True
+    while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                return
+                running = False
             if event.type == pygame.KEYDOWN:
-                direction_map = {
-                    pygame.K_UP: 'up',
-                    pygame.K_DOWN: 'down',
-                    pygame.K_LEFT: 'left',
-                    pygame.K_RIGHT: 'right'
-                }
-                if event.key in direction_map:
-                    game.change_direction(direction_map[event.key])
+                if event.key == pygame.K_UP:
+                    game.change_direction('up')
+                elif event.key == pygame.K_DOWN:
+                    game.change_direction('down')
+                elif event.key == pygame.K_LEFT:
+                    game.change_direction('left')
+                elif event.key == pygame.K_RIGHT:
+                    game.change_direction('right')
 
         game.update()
-        draw_game(screen, game, cell_size, font)
+
+        # Clear screen
+        screen.fill(BLACK)
+
+        # Draw snake
+        for segment in game.snake:
+            pygame.draw.rect(screen, GREEN, (segment[0] * CELL_SIZE, segment[1] * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+
+        # Draw food
+        pygame.draw.rect(screen, RED, (game.food[0] * CELL_SIZE, game.food[1] * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+
+        # Display score
+        score_text = font.render(f"Score: {game.score}", True, WHITE)  # Render score text
+        screen.blit(score_text, (10, 10))  # Position it at the top-left corner
+
+        # Update screen
         pygame.display.flip()
-        time.sleep(max(0.05, 0.5 / game.speed))
-        clock.tick(60)
+        clock.tick(game.speed)
 
+        if game.game_over:
+            running = False
+            # Display final score before exiting
+            screen.fill(BLACK)
+            game_over_text = font.render(f"Game Over! Final Score: {game.score}", True, WHITE)
+            screen.blit(game_over_text, (SCREEN_WIDTH // 2 - 120, SCREEN_HEIGHT // 2 - 20))  # Center the text
+            pygame.display.flip()
+            pygame.time.delay(2000)  # Wait 2 seconds before closing
 
-def start_game(grid_width, grid_height, initial_speed):
-    """Initializes and runs the game."""
-    pygame.init()
-    cell_size = 20
-    width, height = grid_width * cell_size, grid_height * cell_size
-    screen = pygame.display.set_mode((width, height))
-    pygame.display.set_caption("Snake Game")
-    font = pygame.font.Font(None, 25)
-    clock = pygame.time.Clock()
-
-    game = Game(grid_width, grid_height, initial_speed)
-    game_loop(game, screen, cell_size, font, clock)
     pygame.quit()
 
 
-def launch_game(grid_width, grid_height, initial_speed):
-    """Launches the game in a separate thread."""
-    thread = threading.Thread(target=start_game, args=(grid_width, grid_height, initial_speed))
-    thread.daemon = True
-    thread.start()
-    return f"Game started with {grid_width}x{grid_height} grid."
-
-
-def get_instructions():
-    """Returns game instructions."""
-    return """
-    ## How to Play:
-    - Use the arrow keys to move the snake.
-    - Eat the red squares to grow.
-    - Avoid hitting the walls or yourself.
+def start_game_thread():
     """
+    Starts the game in a separate thread.
+    """
+    game_thread = threading.Thread(target=run_game)
+    game_thread.daemon = True  # Allows the main program to exit even if the thread is running
+    game_thread.start()
+
+
+def create_ui():
+    """
+    Creates the Gradio UI for the Snake game.
+    """
+    with gr.Blocks() as ui:
+        gr.Markdown("# Snake Game")
+        start_button = gr.Button("Start Game")
+        start_button.click(start_game_thread)
+
+        gr.Markdown("## How to Play")
+        gr.Markdown("""
+            Use the arrow keys to control the snake:
+            - Up: Move the snake up
+            - Down: Move the snake down
+            - Left: Move the snake left
+            - Right: Move the snake right
+
+            The goal is to eat the red food and grow longer. Avoid hitting the walls or yourself!
+        """)
+
+    return ui
 
 
 if __name__ == "__main__":
-    with gr.Blocks() as demo:
-        gr.Markdown("# Snake Game 🎮")
-        grid_width_slider = gr.Slider(10, 100, value=20, step=1, label="Grid Width")
-        grid_height_slider = gr.Slider(10, 100, value=20, step=1, label="Grid Height")
-        initial_speed_slider = gr.Slider(1, 10, value=5, step=1, label="Initial Speed")
-        start_button = gr.Button("Start Game")
-        instructions = gr.Markdown(get_instructions())
-        game_status = gr.Textbox(label="Status")
-
-        start_button.click(
-            fn=launch_game,
-            inputs=[grid_width_slider, grid_height_slider, initial_speed_slider],
-            outputs=game_status
-        )
-
-    demo.launch()
+    ui = create_ui()
+    ui.launch()
