@@ -1,184 +1,169 @@
 ```markdown
-# Game Design Document: Simple Snake Game
+# Game Design Document: Bouncing Ball
 
-**1. Introduction**
+## 1. Introduction
 
-This document outlines the design for a simple snake game, focusing on clarity and developer-friendliness to enable seamless implementation. The game will be implemented in Python, using the module name `Game` and the primary class name `Game`.
+This document outlines the design for a "Bouncing Ball" game. The game will be implemented in Python, adhering to a modular design with clear object-oriented principles. The primary goal is to create a simple, yet engaging game that is easy to understand and fun to play. This document provides sufficient detail for developers to implement the game mechanics seamlessly.
 
-**2. Game Overview**
+## 2. Game Overview
 
-The snake game is a classic arcade game where the player controls a snake that moves around the screen, eating food to grow longer. The objective is to eat as much food as possible without colliding with the walls or the snake's own body.
+The Bouncing Ball game is a single-player arcade-style game where the player controls a paddle to bounce a ball, preventing it from falling off the screen. The player earns points by successfully bouncing the ball. The game ends when the ball falls off the screen.
 
-**3. Core Game Mechanics**
+## 3. Core Game Mechanics
 
-*   **Movement:** The snake moves continuously in one of four directions (up, down, left, right). The player can change the snake's direction using the arrow keys or WASD keys.
-*   **Eating:** When the snake's head collides with food, the snake grows longer, and the food is moved to a new random location on the game board.
-*   **Collision:** The game ends if the snake's head collides with the wall or any part of its own body.
+*   **Ball Physics:** The ball moves with a constant speed but changes direction upon collision with the paddle or the screen boundaries. Gravity may be added for complexity.
+*   **Paddle Control:** The player controls a paddle (a rectangular object) that moves horizontally across the bottom of the screen.
+*   **Collision Detection:** The game must detect collisions between the ball and the paddle, and the ball and the screen boundaries.
+*   **Bouncing:** When the ball collides with the paddle, its vertical direction is reversed, and its horizontal direction can be influenced based on the location of the collision point on the paddle.
 
-**4. Gameplay Objectives**
+## 4. Gameplay Objectives
 
-*   The primary objective is to achieve the highest possible score by eating food and growing the snake.
-*   A secondary objective could be to unlock achievements or reach certain score milestones.
+*   The primary objective is to keep the ball bouncing for as long as possible.
+*   The player aims to achieve a high score by successfully bouncing the ball repeatedly.
 
-**5. Win/Loss Conditions**
+## 5. Win/Loss Conditions
 
-*   **Win Condition:** There is no explicit win condition in the traditional sense. The game continues indefinitely until the player loses. A possible win condition could be added if a level progression system is implemented, where each level has a target score.
-*   **Loss Condition:** The game ends when the snake's head collides with:
-    *   The game board boundaries (walls).
-    *   Any part of its own body.
+*   **Win Condition:** There is no specific win condition. The game continues indefinitely until the player loses.
+*   **Loss Condition:** The game ends when the ball falls off the bottom of the screen.
 
-**6. Level Progression**
+## 6. Level Progression
 
-*   **Initial Implementation:** The initial version of the game will have a single level with a fixed grid size.
-*   **Future Enhancements:** Level progression could be implemented by:
-    *   Increasing the game speed as the player scores more points.
-    *   Introducing obstacles or power-ups.
-    *   Changing the size or shape of the game board.
-    *   Adding different types of food with varying point values.
+*   The game starts with a basic configuration (ball speed, paddle size).
+*   Difficulty can be increased gradually over time by:
+    *   Increasing the ball speed.
+    *   Decreasing the paddle size.
+    *   Introducing multiple balls.
+    *   Adding obstacles.
+*   Levels could also be pre-defined with specific layouts of obstacles/targets.
 
-**7. User Interactions**
+## 7. User Interactions
 
-*   **Controls:**
-    *   **Movement:**
-        *   Up: Up arrow key or 'W' key
-        *   Down: Down arrow key or 'S' key
-        *   Left: Left arrow key or 'A' key
-        *   Right: Right arrow key or 'D' key
-    *   **Start/Pause:**
-        *   Spacebar: Toggles between pause and resume (optional).
-    *   **Restart:**
-         *   'R' key : Restarts game when game is over.
-*   **User Experience (UX) Guidelines:**
-    *   **Responsive Controls:** Ensure that the snake responds immediately to player input.
-    *   **Clear Visuals:** Use clear and distinct colors for the snake, food, and background.
-    *   **Informative Feedback:** Display the current score prominently on the screen. Display a game over message when the player loses, including the final score.
-    *   **Intuitive Interface:** The game should be easy to understand and play without requiring instructions.
+*   **Paddle Control:**
+    *   **Keyboard:** Left and Right arrow keys to move the paddle.
+    *   **Mouse:** Mouse movement along the x-axis to control the paddle.
+*   **Start Game:** A key (e.g., Spacebar) or button click to start the game.
+*   **Pause Game:** A key (e.g., 'P') to pause/unpause the game.
 
-**8. Scoring System**
+## 8. User Experience (UX) Guidelines
 
-*   **Base Score:** Each piece of food eaten increases the score by a fixed amount (e.g., 10 points).
-*   **Score Multiplier (Optional):** A score multiplier could be introduced based on the snake's length or speed, encouraging risky gameplay.
-*   **High Score Tracking:** The game should keep track of the highest score achieved and display it to the player.
+*   **Visual Clarity:** Use clear and contrasting colors for the ball, paddle, and background.
+*   **Smooth Movement:** Ensure smooth and responsive movement of the paddle and ball.
+*   **Auditory Feedback:** Use sound effects for bouncing and game over events.
+*   **Intuitive Controls:** The controls should be easy to learn and use.
+*   **Clear Score Display:** The score should be prominently displayed on the screen.
+*   **Responsive UI:** The game should respond quickly to user input.
 
-**9. Game Layout**
+## 9. Scoring System
 
-*   **Grid-Based:** The game board will be divided into a grid of cells. The snake and food will occupy one or more cells.
-*   **Size:** The grid size can be configurable, allowing for different difficulty levels (e.g., 20x20, 30x30).
-*   **Boundaries:** The game board will have clearly defined boundaries that the snake cannot pass through.
-*   **Visual Representation:** Use a simple visual representation for the snake (e.g., colored blocks or segments), food (e.g., a different colored block), and background (e.g., a solid color).
+*   Each successful bounce of the ball off the paddle awards a certain number of points (e.g., 10 points).
+*   Bonus points can be awarded for consecutive bounces without missing (combo system).
+*   The score is displayed in real-time during the game.
+*   At the end of the game, the final score is displayed along with a "Game Over" message.
 
-**10. Special Gameplay Instructions**
+## 10. Game Layout
 
-*   **Initial Snake Length:** The snake should start with a length of 3-5 segments.
-*   **Initial Snake Position:** The snake should start in the center of the game board, moving in a random direction.
-*   **Food Generation:** Food should be generated randomly on the game board, ensuring that it does not spawn on top of the snake.
-*   **Game Speed:** The game speed (i.e., the rate at which the snake moves) should be adjustable to control the difficulty.
-*   **Pause Functionality:** (Optional) Implement a pause function that allows the player to temporarily stop the game without losing progress.
+*   **Screen Dimensions:** Define the width and height of the game screen (e.g., 800x600 pixels).
+*   **Paddle Position:** The paddle is located at the bottom of the screen, centered horizontally.
+*   **Ball Initial Position:** The ball starts from a position above the paddle.
+*   **Boundaries:** The game screen has boundaries on all four sides.  The top and sides cause the ball to bounce. The bottom results in game over.
+*   **(Optional) Obstacles:** Rectangular or circular obstacles can be added to the screen, which will cause the ball to bounce upon collision.
 
-**11. Python Module: `Game`**
+## 11. Special Gameplay Instructions
 
-*   **Module Name:** `Game`
+*   The game starts when the player presses the "Start" key.
+*   The player controls the paddle to bounce the ball.
+*   The game ends when the ball falls off the bottom of the screen.
+*   The player can pause/unpause the game by pressing the "Pause" key.
 
-**12. Primary Class: `Game`**
+## 12. Python Module: `Game`
 
-*   **Class Name:** `Game`
-*   **Attributes:**
-    *   `grid_width` (int): The width of the game grid.
-    *   `grid_height` (int): The height of the game grid.
-    *   `snake` (list of tuples): A list of (x, y) coordinates representing the snake's body segments. The head of the snake is the first element in the list.
-    *   `food` (tuple): The (x, y) coordinates of the food.
-    *   `direction` (str): The current direction of the snake ('up', 'down', 'left', 'right').
-    *   `score` (int): The player's current score.
-    *   `game_over` (bool): A flag indicating whether the game is over.
-    *  `speed` (int): Game speed (frames per move).
-*   **Methods:**
-    *   `__init__(self, grid_width, grid_height, initial_speed)`: Initializes the game.  Sets up the grid dimensions, places the initial snake, generates the first food item, sets the initial direction, initializes the score, and sets the game_over flag to False. `initial_speed` sets the game speed.
-    *   `reset(self)`: Reset the game to begin from fresh.
-    *   `spawn_food(self)`: Generates a new food item at a random location on the grid that is not occupied by the snake.
-    *   `move(self)`: Moves the snake one step in the current direction.  Checks for collisions with the walls and the snake's body. If a collision occurs, sets the game_over flag to True. If the snake eats food, it grows longer and the score increases.
-    *   `change_direction(self, new_direction)`: Changes the snake's direction, preventing immediate 180-degree turns.
-    *   `get_state(self)`: Returns the current state of the game, including the grid size, snake position, food position, score, and game_over status. This can be used for rendering the game or for AI purposes.
-    *   `is_valid_move(self, x, y)`: Checks if a given cell (x, y) is within the grid boundaries.
-    *   `is_collision(self, x, y)`: Checks if snake collides with its body.
-    *   `update(self)`: Handle the game state update. Move snake, check for food eaten and collision, and updates score.
-    *   `get_score(self)`: Return the score.
+### 12.1 Classes
 
-**13. Detailed Gameplay Elements and Design Notes**
+*   **`Game` (Primary Class):**
+    *   **Attributes:**
+        *   `screen_width` (int): Width of the game screen.
+        *   `screen_height` (int): Height of the game screen.
+        *   `paddle` (Paddle): Instance of the `Paddle` class.
+        *   `ball` (Ball): Instance of the `Ball` class.
+        *   `score` (int): Player's score.
+        *   `game_over` (bool): Flag indicating if the game is over.
+        *   `obstacles` (list of Obstacle): A list of `Obstacle` objects in the level.
+    *   **Methods:**
+        *   `__init__(self, width=800, height=600)`: Initializes the game with screen dimensions, paddle, ball, and initial score.
+        *   `run(self)`: Main game loop. Handles user input, updates game state, and renders the game.
+        *   `handle_input(self)`: Handles user input for paddle control and pause.
+        *   `update(self)`: Updates the game state (ball position, collision detection, score).
+        *   `render(self, screen)`: Renders the game elements (paddle, ball, score) on the screen.
+        *   `check_collision(self)`: Detects collision between the ball and paddle, ball and walls, and ball and obstacles.
+        *   `game_over_screen(self, screen)`: Displays the "Game Over" screen with the final score.
+        * `reset(self)`: Resets the game state to start a new game.
 
-*   **Game Initialization:**
-    *   The `Game` class should be initialized with the grid dimensions (width and height) and initial speed.
-    *   The snake should start in the center of the grid with a length of 3-5 segments.
-    *   The initial direction of the snake should be randomly chosen.
-    *   The first food item should be generated at a random location on the grid.
-*   **Snake Movement:**
-    *   The snake moves continuously in the current direction.
-    *   The `move()` method should update the snake's position by adding a new segment to the head and removing the last segment of the tail, unless the snake has eaten food.
-    *   The `change_direction()` method should update the snake's direction based on player input, preventing immediate 180-degree turns.
-*   **Food Consumption:**
-    *   When the snake's head collides with the food, the snake grows longer, and the food is moved to a new random location on the grid.
-    *   The `spawn_food()` method should generate a new food item at a random location on the grid that is not occupied by the snake.
-    *   The score should be updated when the snake eats food.
-*   **Collision Detection:**
-    *   The game should check for collisions with the walls and the snake's body.
-    *   If a collision occurs, the game_over flag should be set to True.
-*   **Game Over:**
-    *   When the game_over flag is set to True, the game should display a game over message and the final score.
-    *   The player should be able to restart the game by pressing a key (e.g., 'R').
-*   **Rendering:**
-    *   The game state should be rendered on the screen using a suitable graphics library (e.g., Pygame, Tkinter).
-    *   The snake, food, and background should be rendered with clear and distinct colors.
-    *   The score should be displayed prominently on the screen.
-*   **Game Loop:**
-    *   The game should run in a loop that updates the game state and renders the game on the screen.
-    *   The loop should run at a fixed frame rate to ensure smooth gameplay.
-*   **Modular Design:** The code should be modular to facilitate future enhancements and modifications.
+*   **`Paddle`:**
+    *   **Attributes:**
+        *   `x` (int): X-coordinate of the paddle.
+        *   `y` (int): Y-coordinate of the paddle.
+        *   `width` (int): Width of the paddle.
+        *   `height` (int): Height of the paddle.
+        *   `speed` (int): Paddle movement speed.
+    *   **Methods:**
+        *   `__init__(self, x, y, width, height, speed)`: Initializes the paddle with position, dimensions, and speed.
+        *   `move_left(self)`: Moves the paddle to the left.
+        *   `move_right(self)`: Moves the paddle to the right.
+        *   `draw(self, screen)`: Draws the paddle on the screen.
 
-**14. Example Class Usage**
-```python
-# Example usage
-from Game import Game
+*   **`Ball`:**
+    *   **Attributes:**
+        *   `x` (int): X-coordinate of the ball.
+        *   `y` (int): Y-coordinate of the ball.
+        *   `radius` (int): Radius of the ball.
+        *   `speed_x` (int): Horizontal speed of the ball.
+        *   `speed_y` (int): Vertical speed of the ball.
+    *   **Methods:**
+        *   `__init__(self, x, y, radius, speed_x, speed_y)`: Initializes the ball with position, radius, and speed.
+        *   `move(self)`: Updates the ball's position based on its speed.
+        *   `draw(self, screen)`: Draws the ball on the screen.
+        *   `bounce_x(self)`: Reverses the horizontal direction of the ball.
+        *   `bounce_y(self)`: Reverses the vertical direction of the ball.
 
-#Game Setup
-grid_width = 20
-grid_height = 20
-initial_speed = 10 #frames per move
+*   **`Obstacle` (Optional):**
+    *   **Attributes:**
+        *   `x` (int): X-coordinate of the obstacle.
+        *   `y` (int): Y-coordinate of the obstacle.
+        *   `width` (int): Width of the obstacle.
+        *   `height` (int): Height of the obstacle.
+    *   **Methods:**
+        *   `__init__(self, x, y, width, height)`: Initializes the obstacle.
+        *   `draw(self, screen)`: Draws the obstacle on the screen.
 
-game = Game(grid_width, grid_height, initial_speed)
+### 12.2 Functionalities
 
-#Game loop Example (this would typically be in your main application)
-while not game.game_over:
-    #Get player input. example:
-    #new_direction = get_player_direction() #Function to handle player input
+1.  **Initialization:** The `Game` class initializes all game elements (paddle, ball, score, screen).
+2.  **Game Loop:** The `run` method contains the main game loop, which handles:
+    *   User input (paddle movement, pause).
+    *   Updating game state (ball movement, collision detection, score).
+    *   Rendering game elements on the screen.
+3.  **Collision Detection:** The `check_collision` method detects collisions between the ball and the paddle, screen boundaries, and obstacles.
+4.  **Paddle Movement:** The `Paddle` class provides methods to move the paddle left and right.
+5.  **Ball Movement:** The `Ball` class provides methods to move the ball and handle bouncing.
+6.  **Scoring:** The `Game` class keeps track of the player's score and updates it based on successful bounces.
+7.  **Game Over:** The game ends when the ball falls off the bottom of the screen. A "Game Over" screen is displayed with the final score.
 
-    #Example direction change
-    #game.change_direction(new_direction) #Change direction
+## 13. Design Notes for Developers
 
-    #Update the game state
-    game.update()
+*   Use a game library like Pygame or Arcade to handle graphics, input, and sound.
+*   Implement collision detection efficiently using appropriate algorithms (e.g., AABB collision detection).
+*   Structure the code in a modular way, separating concerns into different classes and functions.
+*   Pay attention to performance optimization, especially if adding more complex features like multiple balls or obstacles.
+*   Consider adding a configuration file to easily adjust game parameters (e.g., ball speed, paddle size).
+*   Add comments to the code to explain the logic and functionality.
+*   Use version control (e.g., Git) to manage the codebase.
 
-    #Render the game (implementation not detailed here)
-    #render(game.get_state())
+## 14. Future Enhancements
 
-    #Delay (Control Game speed)
-    #time.sleep(1 / game.speed)
-    #Optional delay - based on speed attribute from Game class.
-
-#Game over sequence
-final_score = game.get_score()
-print(f"Game Over! Final Score: {final_score}")
-
-#Reset the game for another play
-#game.reset()
-```
-
-**15. Future Enhancements**
-
-*   **Level Progression:** Implement multiple levels with increasing difficulty.
-*   **Power-Ups:** Introduce power-ups that grant temporary advantages, such as increased speed or invincibility.
-*   **Obstacles:** Add obstacles to the game board that the snake must avoid.
-*   **Multiplayer:** Allow multiple players to compete against each other.
-*   **AI Opponent:** Implement an AI opponent that plays the game automatically.
-*   **Sound Effects and Music:** Add sound effects and music to enhance the game's atmosphere.
-
-This document provides a comprehensive guide for developing a simple snake game. The detailed descriptions of the core game mechanics, gameplay objectives, user interactions, and scoring system should enable developers to implement the game seamlessly. The modular design and clear code structure will facilitate future enhancements and modifications.
+*   **Power-ups:** Add power-ups that can be collected to enhance gameplay (e.g., increased paddle size, ball speed boost).
+*   **Multiple Balls:** Introduce multiple balls to increase the challenge.
+*   **Different Ball Types:** Add different types of balls with varying properties (e.g., bouncy ball, heavy ball).
+*   **Level Editor:** Allow users to create their own levels.
+*   **Online Leaderboard:** Implement an online leaderboard to track high scores.
+*   **Improved AI:** Add AI-controlled opponents.
 ```

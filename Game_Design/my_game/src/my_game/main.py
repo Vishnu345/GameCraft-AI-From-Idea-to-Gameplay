@@ -9,7 +9,7 @@ warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
 os.makedirs('output', exist_ok=True)
 
-topic= "simple snake game"
+topic= "Bouncing ball game"
 module_name = "Game"
 class_name = "Game"
 
